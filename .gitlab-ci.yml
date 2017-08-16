@@ -12,7 +12,6 @@ variables:
   POSTGRES_PASSWORD: ""
 
 before_script:
-  - apk add --update git make gcc
   - echo $GOPATH
   - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
   - echo $GOPATH
