@@ -13,18 +13,21 @@ variables:
 
 before_script:
   - apk add --update git
+  - echo $GOPATH
   - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
+  - echo $GOPATH
   - mkdir -p $GOPATH/src
   - cd $GOPATH/src
   - ln -s $CI_PROJECT_DIR
   - cd $CI_PROJECT_DIR
+  - echo $CI_PROJECT_DIR
 
 build-locatemybeer-staging:
   stage: build
   script:
-    - go build
+    - make build
 
 test-locatemybeer-staging:
   stage: test
   script:
-    - go build
+    - make test
