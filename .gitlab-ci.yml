@@ -16,11 +16,11 @@ before_script:
   - echo $GOPATH
   - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
   - echo $GOPATH
-  - mkdir -p $GOPATH/src
-  - cd $GOPATH/src
-  - ln -s $CI_PROJECT_DIR
-  - cd $CI_PROJECT_DIR
-  - echo $CI_PROJECT_DIR
+  - mkdir -p $GOPATH/src/gitlab.com/locatemybeer/  
+  - cd $CI_PROJECT_DIR/..
+  - cp -r lmb-back $GOPATH/src/gitlab.com/locatemybeer/  
+  - echo $GOPATH/src/gitlab.com/locatemybeer/lmb-back
+  - cd $GOPATH/src/gitlab.com/locatemybeer/lmb-back
 
 build-locatemybeer-staging:
   stage: build
