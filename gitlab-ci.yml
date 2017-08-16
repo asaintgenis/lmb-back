@@ -1,0 +1,31 @@
+image: golang:1.8.3-alpine
+stages:
+  - build
+  - test
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: lmb
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: ""
+
+before_script:
+  - apk add --update git
+  - go get github.com/tools/godep
+  - cp -r /builds/locatemybeer /go/src/gitlab.com/locatemybeer/
+  - cd /go/src/gitlab.com/locatemybeer/lmb-back
+  - psql -U runner -d lmb -a -f testdata/db.sql
+
+build-locatemybeer-staging:
+  stage: build
+  script:
+    - godep restore
+    - godep go build
+
+test-locatemybeer-staging:
+  stage: test
+  script:
+    - godep restore
+    - godep go test -v -cover ./...
