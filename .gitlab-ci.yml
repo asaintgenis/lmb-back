@@ -13,19 +13,21 @@ variables:
 
 before_script:
   - apk add --update git
-  - go get github.com/tools/godep
-  - cp -r /builds/locatemybeer /go/src/gitlab.com/locatemybeer/
-  - cd /go/src/gitlab.com/locatemybeer/lmb-back
+  - go get -u github.com/golang/dep/cmd/dep
+  - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
+  - mkdir -p $GOPATH/src
+  - cd $GOPATH/src
+  - ln -s $CI_PROJECT_DIR
+  - cd $CI_PROJECT_DIR
   - psql -U runner -d lmb -a -f testdata/db.sql
+  - dep ensure -update
 
 build-locatemybeer-staging:
   stage: build
   script:
-    - godep restore
-    - godep go build
+    - go build
 
 test-locatemybeer-staging:
   stage: test
   script:
-    - godep restore
-    - godep go test -v -cover ./...
+    - go build
