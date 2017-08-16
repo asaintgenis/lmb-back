@@ -12,7 +12,7 @@ variables:
   POSTGRES_PASSWORD: ""
 
 before_script:
-  - apk add --update git
+  - apk add --update git make
   - echo $GOPATH
   - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
   - echo $GOPATH
@@ -21,6 +21,7 @@ before_script:
   - ln -s $CI_PROJECT_DIR
   - cd $CI_PROJECT_DIR
   - echo $CI_PROJECT_DIR
+  - ll -a $GOPATH/src
 
 build-locatemybeer-staging:
   stage: build
