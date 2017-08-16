@@ -19,7 +19,6 @@ before_script:
   - cd $GOPATH/src
   - ln -s $CI_PROJECT_DIR
   - cd $CI_PROJECT_DIR
-  - psql -U runner -d lmb -a -f testdata/db.sql
   - dep ensure -update
 
 build-locatemybeer-staging:
