@@ -9,17 +9,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestArtistDAO(t *testing.T) {
+func TestBeerDAO(t *testing.T) {
 	db := testdata.ResetDB()
-	dao := NewArtistDAO()
+	dao := NewBeerDAO()
 
 	{
 		// Get
 		testDBCall(db, func(rs app.RequestScope) {
-			artist, err := dao.Get(rs, 2)
+			beer, err := dao.Get(rs, 2)
 			assert.Nil(t, err)
-			if assert.NotNil(t, artist) {
-				assert.Equal(t, 2, artist.Id)
+			if assert.NotNil(t, beer) {
+				assert.Equal(t, 2, beer.Id)
 			}
 		})
 	}
@@ -27,25 +27,25 @@ func TestArtistDAO(t *testing.T) {
 	{
 		// Create
 		testDBCall(db, func(rs app.RequestScope) {
-			artist := &models.Beer{
+			beer := &models.Beer{
 				Id:   1000,
 				Name: "tester",
 			}
-			err := dao.Create(rs, artist)
+			err := dao.Create(rs, beer)
 			assert.Nil(t, err)
-			assert.NotEqual(t, 1000, artist.Id)
-			assert.NotZero(t, artist.Id)
+			assert.NotEqual(t, 1000, beer.Id)
+			assert.NotZero(t, beer.Id)
 		})
 	}
 
 	{
 		// Update
 		testDBCall(db, func(rs app.RequestScope) {
-			artist := &models.Beer{
+			beer := &models.Beer{
 				Id:   2,
 				Name: "tester",
 			}
-			err := dao.Update(rs, artist.Id, artist)
+			err := dao.Update(rs, beer.Id, beer)
 			assert.Nil(t, err)
 		})
 	}
@@ -53,11 +53,11 @@ func TestArtistDAO(t *testing.T) {
 	{
 		// Update with error
 		testDBCall(db, func(rs app.RequestScope) {
-			artist := &models.Beer{
+			beer := &models.Beer{
 				Id:   2,
 				Name: "tester",
 			}
-			err := dao.Update(rs, 99999, artist)
+			err := dao.Update(rs, 99999, beer)
 			assert.NotNil(t, err)
 		})
 	}
@@ -81,9 +81,9 @@ func TestArtistDAO(t *testing.T) {
 	{
 		// Query
 		testDBCall(db, func(rs app.RequestScope) {
-			artists, err := dao.Query(rs, 1, 3)
+			beers, err := dao.Query(rs, 1, 3)
 			assert.Nil(t, err)
-			assert.Equal(t, 3, len(artists))
+			assert.Equal(t, 2, len(beers))
 		})
 	}
 

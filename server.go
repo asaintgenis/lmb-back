@@ -75,8 +75,8 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 		TokenHandler:  apis.JWTHandler,
 	}))
 
-	artistDAO := daos.NewArtistDAO()
-	apis.ServeBeerResource(rg, services.NewBeerService(artistDAO))
+	beerDAO := daos.NewBeerDAO()
+	apis.ServeBeerResource(rg, services.NewBeerService(beerDAO))
 
 	// wire up more resource APIs here
 

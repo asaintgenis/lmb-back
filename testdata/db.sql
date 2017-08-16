@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS beerBar;
 DROP TABLE IF EXISTS beer;
 DROP TABLE IF EXISTS bar;
 
@@ -10,8 +11,7 @@ CREATE TABLE beer
 CREATE TABLE bar
 (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(160)  NOT NULL,
-    FOREIGN KEY (artist_id) REFERENCES artist (id) ON DELETE CASCADE
+    title VARCHAR(160)  NOT NULL
 );
 
 CREATE TABLE beerBar
@@ -19,10 +19,9 @@ CREATE TABLE beerBar
   id SERIAL PRIMARY KEY,
   beer_id INTEGER NOT NULL,
   bar_id INTEGER NOT NULL,
-  FOREIGN KEY (beer_id) REFERENCES beer (id) ON DELETE CASCADE
+  FOREIGN KEY (beer_id) REFERENCES beer (id) ON DELETE CASCADE,
   FOREIGN KEY (bar_id) REFERENCES bar (id) ON DELETE CASCADE
-
-)
+);
 
 INSERT INTO beer (name) VALUES ('1664');
 INSERT INTO beer (name) VALUES ('Kronenbourg');

@@ -25,7 +25,7 @@ type (
 	}
 )
 
-// ServeArtist sets up the routing of artist endpoints and the corresponding handlers.
+// ServeBeerResource sets up the routing of beer endpoints and the corresponding handlers.
 func ServeBeerResource(rg *routing.RouteGroup, service beerService) {
 	r := &beerResource{service}
 	rg.Get("/beers/<id>", r.get)

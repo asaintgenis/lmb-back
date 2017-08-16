@@ -5,7 +5,7 @@ import (
 	"gitlab.com/locatemybeer/lmb-back/models"
 )
 
-// artistDAO specifies the interface of the beer DAO needed by BeerService.
+// beerDao specifies the interface of the beer DAO needed by BeerService.
 type beerDao interface {
 	// Get returns the beer with the specified beer ID.
 	Get(rs app.RequestScope, id int) (*models.Beer, error)
@@ -14,9 +14,9 @@ type beerDao interface {
 	// Query returns the list of beers with the given offset and limit.
 	Query(rs app.RequestScope, offset, limit int) ([]models.Beer, error)
 	// Create saves a new beer in the storage.
-	Create(rs app.RequestScope, artist *models.Beer) error
+	Create(rs app.RequestScope, beer *models.Beer) error
 	// Update updates the beer with given ID in the storage.
-	Update(rs app.RequestScope, id int, artist *models.Beer) error
+	Update(rs app.RequestScope, id int, beer *models.Beer) error
 	// Delete removes the beer with given ID from the storage.
 	Delete(rs app.RequestScope, id int) error
 }
@@ -26,12 +26,12 @@ type BeerService struct {
 	dao beerDao
 }
 
-// NewArtistService creates a new BeerService with the given artist DAO.
+// NewBeerService creates a new BeerService with the given beer DAO.
 func NewBeerService(dao beerDao) *BeerService {
 	return &BeerService{dao}
 }
 
-// Get returns the beer with the specified the artist ID.
+// Get returns the beer with the specified the beer ID.
 func (s *BeerService) Get(rs app.RequestScope, id int) (*models.Beer, error) {
 	return s.dao.Get(rs, id)
 }
@@ -60,12 +60,12 @@ func (s *BeerService) Update(rs app.RequestScope, id int, model *models.Beer) (*
 
 // Delete deletes the beer with the specified ID.
 func (s *BeerService) Delete(rs app.RequestScope, id int) (*models.Beer, error) {
-	artist, err := s.dao.Get(rs, id)
+	beer, err := s.dao.Get(rs, id)
 	if err != nil {
 		return nil, err
 	}
 	err = s.dao.Delete(rs, id)
-	return artist, err
+	return beer, err
 }
 
 // Count returns the number of beers.
