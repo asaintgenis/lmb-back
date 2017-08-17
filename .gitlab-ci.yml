@@ -2,6 +2,7 @@ image: golang:1.8.3
 stages:
   - build
   - test
+  - deploy
 
 services:
   - postgres:latest
@@ -32,3 +33,13 @@ test-locatemybeer-staging:
   script:
     - $GOPATH/bin/glide install
     - make test
+
+deploy-locatemybeer-staging:
+  stage: deploy
+  script:
+   - apt-get update -qy
+   - apt-get install -y ruby-dev
+   - gem install dpl
+   - dpl --provider=heroku --app=gitlab-ci-python-test-staging --api-key=$HEROKU_STAGING_API_KEY
+   only:
+     - master
