@@ -20,13 +20,16 @@ before_script:
   - cp -r lmb-back $GOPATH/src/gitlab.com/locatemybeer/  
   - echo $GOPATH/src/gitlab.com/locatemybeer/lmb-back
   - cd $GOPATH/src/gitlab.com/locatemybeer/lmb-back
+  - go get -u github.com/Masterminds/glide
 
 build-locatemybeer-staging:
   stage: build
   script:
+    - glide install
     - make build
 
 test-locatemybeer-staging:
   stage: test
   script:
+    - glide install
     - make test
