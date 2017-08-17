@@ -25,11 +25,11 @@ before_script:
 build-locatemybeer-staging:
   stage: build
   script:
-    - glide install
+    - $GOPATH/bin/glide install
     - make build
 
 test-locatemybeer-staging:
   stage: test
   script:
-    - glide install
+    - $GOPATH/bin/glide install
     - make test
