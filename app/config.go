@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/viper"
 	"github.com/go-ozzo/ozzo-validation"
+	"os"
 )
 
 // Config stores the application-wide configurations
@@ -43,7 +44,7 @@ func LoadConfig(configPaths ...string) error {
 	v.SetEnvPrefix("restful")
 	v.AutomaticEnv()
 	v.SetDefault("error_file", "config/errors.yaml")
-	v.SetDefault("server_port", 8080)
+	v.SetDefault("server_port", os.Getenv("PORT"))
 	v.SetDefault("jwt_signing_method", "HS256")
 	for _, path := range configPaths {
 		v.AddConfigPath(path)
