@@ -12,9 +12,8 @@ variables:
   POSTGRES_PASSWORD: ""
 
 before_script:
-  - echo $GOPATH
+  - export RESTFUL_DSN=postgres://runner@postgres/lmb?sslmode=disable
   - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
-  - echo $GOPATH
   - mkdir -p $GOPATH/src/gitlab.com/locatemybeer/  
   - cd $CI_PROJECT_DIR/..
   - cp -r lmb-back $GOPATH/src/gitlab.com/locatemybeer/  
