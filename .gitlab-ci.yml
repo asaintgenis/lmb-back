@@ -13,6 +13,7 @@ variables:
   POSTGRES_PASSWORD: ""
 
 before_script:
+  - export PORT=8080
   - export RESTFUL_DSN=postgres://runner@postgres/lmb?sslmode=disable
   - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
   - mkdir -p $GOPATH/src/gitlab.com/locatemybeer/  
@@ -33,15 +34,17 @@ test-locatemybeer-staging:
   script:
     - $GOPATH/bin/glide install
     - make test
-    
+
 
 deploy-locatemybeer-staging:
   stage: deploy
   script:
+    - mkdir $CI_PROJECT_DIR/gem
+    - export GEM_HOME=$CI_PROJECT_DIR/gem
     - apt-get update -qy
     - apt-get install -y ruby-dev
-    - gem install dpl
-    - dpl --provider=heroku --app=gitlab-ci-python-test-staging --api-key=$HEROKU_STAGING_API_KEY
+    - $GEM_HOME/bin/gem install dpl
+    - dpl --provider=heroku --app=intense-crag-22322 --api-key=$HEROKU_STAGING_API_KEY
   only:
     - master
 
