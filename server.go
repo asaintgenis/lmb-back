@@ -78,6 +78,8 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 	beerDAO := daos.NewBeerDAO()
 	apis.ServeBeerResource(rg, services.NewBeerService(beerDAO))
 
+	barDAO := daos.NewBarDAO()
+	apis.ServeBarResource(rg, services.NewBarService(barDAO))
 	// wire up more resource APIs here
 
 	return router
