@@ -41,7 +41,7 @@ deploy-locatemybeer-staging:
   stage: deploy
   script:
     - apt-get update -qy
-    - apt-get install rubygems
+    - apt-get install -y rubygems
     - /usr/bin/gem install dpl
     - dpl --provider=heroku --app=intense-crag-22322 --api-key=$HEROKU_STAGING_API_KEY
   only:
