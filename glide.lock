@@ -1,5 +1,5 @@
-hash: e641ae01c0aa4b50911c4f1f212b0464c2e901c49796a970e3f1ed758c0577a2
-updated: 2017-08-16T21:14:09.5313251+02:00
+hash: 87b01b334699671e677da0bf4834775ebfcfe332145cde2197d14a44eef6ef26
+updated: 2017-09-07T23:55:15.4343443+02:00
 imports:
 - name: cloud.google.com/go
   version: 686f0e89858ea78eae54d4b2021e6bfc7d3a30ca
@@ -15,8 +15,6 @@ imports:
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/fsnotify/fsnotify
   version: 4da3e2cfbabc9f751898f250b49f2439785783a1
-- name: github.com/go-ozzo/ozzo-dbx
-  version: 29c9000901a31654f0930a78060737b79059a93b
 - name: github.com/go-ozzo/ozzo-routing
   version: 64c302ed7fc6f94c03ac31d29ae3c86e6d900b08
   subpackages:
@@ -56,10 +54,19 @@ imports:
   - json/parser
   - json/scanner
   - json/token
+- name: github.com/jinzhu/gorm
+  version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
+  subpackages:
+  - dialects/postgres
+- name: github.com/jinzhu/inflection
+  version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/lib/pq
   version: 4dd446efc17690bc53e154025146f73203b18309
   subpackages:
+  - hstore
   - oid
+- name: github.com/lucasb-eyer/go-colorful
+  version: 231272389856c976b7500c4fffcc52ddf06ff4eb
 - name: github.com/magiconair/properties
   version: be5ece7dd465ab0765a9682137865547526d1dfb
 - name: github.com/mitchellh/mapstructure
