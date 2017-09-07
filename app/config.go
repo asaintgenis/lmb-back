@@ -44,7 +44,7 @@ func LoadConfig(configPaths ...string) error {
 	v.SetEnvPrefix("restful")
 	v.AutomaticEnv()
 	v.SetDefault("error_file", "config/errors.yaml")
-	v.SetDefault("server_port", os.Getenv("PORT"))
+	v.SetDefault("server_port", getServerPort())
 	v.SetDefault("jwt_signing_method", "HS256")
 	for _, path := range configPaths {
 		v.AddConfigPath(path)
@@ -56,4 +56,11 @@ func LoadConfig(configPaths ...string) error {
 		return err
 	}
 	return Config.Validate()
+}
+
+func getServerPort() string {
+	if(os.Getenv("PORT") != "") {
+		return os.Getenv("PORT")
+	}
+	return "8080"
 }

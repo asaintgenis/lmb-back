@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-ozzo/ozzo-dbx"
 	_ "github.com/lib/pq" // initialize posgresql for test
 	"gitlab.com/locatemybeer/lmb-back/app"
+	"github.com/jinzhu/gorm"
 )
 
 var (
-	DB *dbx.DB
+	DB *gorm.DB
 )
 
 func init() {
@@ -21,7 +21,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	DB, err = dbx.MustOpen("postgres", app.Config.DSN)
+	DB, err = gorm.Open("postgres", app.Config.DSN)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +29,7 @@ func init() {
 
 // ResetDB re-create the database schema and re-populate the initial data using the SQL statements in db.sql.
 // This method is mainly used in tests.
-func ResetDB() *dbx.DB {
+func ResetDB() *gorm.DB {
 	if err := runSQLFile(DB, getSQLFile()); err != nil {
 		panic(fmt.Errorf("Error while initializing test database: %s", err))
 	}
@@ -43,7 +43,7 @@ func getSQLFile() string {
 	return "../testdata/db.sql"
 }
 
-func runSQLFile(db *dbx.DB, file string) error {
+func runSQLFile(db *gorm.DB, file string) error {
 	s, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func runSQLFile(db *dbx.DB, file string) error {
 		if line == "" {
 			continue
 		}
-		if _, err := db.NewQuery(line).Execute(); err != nil {
+		if err := db.Exec(line).Error; err != nil {
 			fmt.Println(line)
 			return err
 		}

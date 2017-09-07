@@ -3,15 +3,15 @@ package daos
 import (
 	"time"
 
-	"github.com/go-ozzo/ozzo-dbx"
 	"gitlab.com/locatemybeer/lmb-back/app"
+	"github.com/jinzhu/gorm"
 )
 
-func testDBCall(db *dbx.DB, f func(rs app.RequestScope)) {
+func testDBCall(db *gorm.DB, f func(rs app.RequestScope)) {
 	rs := mockRequestScope(db)
 
 	defer func() {
-		rs.Tx().Rollback()
+		rs.DB().Rollback()
 	}()
 
 	f(rs)
@@ -19,13 +19,13 @@ func testDBCall(db *dbx.DB, f func(rs app.RequestScope)) {
 
 type requestScope struct {
 	app.Logger
-	tx *dbx.Tx
+	db *gorm.DB
 }
 
-func mockRequestScope(db *dbx.DB) app.RequestScope {
-	tx, _ := db.Begin()
+func mockRequestScope(db *gorm.DB) app.RequestScope {
+	db = db.Begin()
 	return &requestScope{
-		tx: tx,
+		db: db,
 	}
 }
 
@@ -40,19 +40,12 @@ func (rs *requestScope) RequestID() string {
 	return "test"
 }
 
-func (rs *requestScope) Tx() *dbx.Tx {
-	return rs.tx
+func (rs *requestScope) DB() *gorm.DB {
+	return rs.db
 }
 
-func (rs *requestScope) SetTx(tx *dbx.Tx) {
-	rs.tx = tx
-}
-
-func (rs *requestScope) Rollback() bool {
-	return false
-}
-
-func (rs *requestScope) SetRollback(v bool) {
+func (rs *requestScope) SetDB(db *gorm.DB) {
+	rs.db = db
 }
 
 func (rs *requestScope) Now() time.Time {

@@ -12,18 +12,19 @@ import (
 	"github.com/go-ozzo/ozzo-routing/fault"
 	"github.com/go-ozzo/ozzo-validation"
 	"gitlab.com/locatemybeer/lmb-back/errors"
+	"github.com/jinzhu/gorm"
 )
 
 // Init returns a middleware that prepares the request context and processing environment.
 // The middleware will populate RequestContext, handle possible panics and errors from the processing
 // handlers, and add an access log entry.
-func Init(logger *logrus.Logger) routing.Handler {
+func Init(logger *logrus.Logger, db *gorm.DB) routing.Handler {
 	return func(rc *routing.Context) error {
 		now := time.Now()
 
 		rc.Response = &access.LogResponseWriter{rc.Response, http.StatusOK, 0}
 
-		ac := newRequestScope(now, logger, rc.Request)
+		ac := newRequestScope(now, logger, db, rc.Request)
 		rc.Set("Context", ac)
 
 		fault.Recovery(ac.Errorf, convertError)(rc)

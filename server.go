@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/go-ozzo/ozzo-dbx"
 	"github.com/go-ozzo/ozzo-routing"
 	"github.com/go-ozzo/ozzo-routing/auth"
 	"github.com/go-ozzo/ozzo-routing/content"
 	"github.com/go-ozzo/ozzo-routing/cors"
 	_ "github.com/lib/pq"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"gitlab.com/locatemybeer/lmb-back/apis"
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"gitlab.com/locatemybeer/lmb-back/daos"
@@ -24,6 +25,8 @@ func main() {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
 	}
 
+
+
 	// load error messages
 	if err := errors.LoadMessages(app.Config.ErrorFile); err != nil {
 		panic(fmt.Errorf("Failed to read the error message file: %s", err))
@@ -32,15 +35,15 @@ func main() {
 	// create the logger
 	logger := logrus.New()
 
-	// connect to the database
-	db, err := dbx.MustOpen("postgres", app.Config.DSN)
+	//connecting to DB
+	db, err := gorm.Open("postgres", app.Config.DSN)
 	if err != nil {
 		panic(err)
 	}
-	db.LogFunc = logger.Infof
-
+	db.SetLogger(logger)
+	db.Begin()
 	// wire up API routing
-	http.Handle("/", buildRouter(logger, db))
+	http.Handle("/", buildRouter(logger,db))
 
 	// start the server
 	address := fmt.Sprintf(":%v", app.Config.ServerPort)
@@ -48,7 +51,7 @@ func main() {
 	panic(http.ListenAndServe(address, nil))
 }
 
-func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
+func buildRouter(logger *logrus.Logger,db *gorm.DB) *routing.Router {
 	router := routing.New()
 
 	router.To("GET,HEAD", "/ping", func(c *routing.Context) error {
@@ -57,14 +60,13 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 	})
 
 	router.Use(
-		app.Init(logger),
+		app.Init(logger, db),
 		content.TypeNegotiator(content.JSON),
 		cors.Handler(cors.Options{
 			AllowOrigins: "*",
 			AllowHeaders: "*",
 			AllowMethods: "*",
 		}),
-		app.Transactional(db),
 	)
 
 	rg := router.Group("/v1")
