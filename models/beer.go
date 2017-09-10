@@ -8,11 +8,9 @@ import (
 // Beer represents a beer record.
 type Beer struct {
 	gorm.Model
-	Id   int    `json:"id" db:"id"`
-	Name string `json:"name" db:"name"`
-	Content string `json:"content" db:"content"`
-	Pic string `json:"pic" db:"pic"`
-	beerStyle BeerStyle `json:"beerStyle_id" db:"beerstyle_id"`
+	Name    string `json:"name"`
+	Content string `json:"content"`
+	Pic     string `json:"pic"`
 }
 
 // Validate validates the Beer fields.

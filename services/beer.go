@@ -8,7 +8,7 @@ import (
 // beerDao specifies the interface of the beer DAO needed by BeerService.
 type beerDao interface {
 	// Get returns the beer with the specified beer ID.
-	Get(rs app.RequestScope, id int) (*models.Beer, error)
+	Get(rs app.RequestScope, id uint) (*models.Beer, error)
 	// Count returns the number of beers.
 	Count(rs app.RequestScope) (int, error)
 	// Query returns the list of beers with the given offset and limit.
@@ -16,9 +16,9 @@ type beerDao interface {
 	// Create saves a new beer in the storage.
 	Create(rs app.RequestScope, beer *models.Beer) error
 	// Update updates the beer with given ID in the storage.
-	Update(rs app.RequestScope, id int, beer *models.Beer) error
+	Update(rs app.RequestScope, beer *models.Beer) error
 	// Delete removes the beer with given ID from the storage.
-	Delete(rs app.RequestScope, id int) error
+	Delete(rs app.RequestScope, id uint) error
 }
 
 // BeerService provides services related with beers.
@@ -32,7 +32,7 @@ func NewBeerService(dao beerDao) *BeerService {
 }
 
 // Get returns the beer with the specified the beer ID.
-func (s *BeerService) Get(rs app.RequestScope, id int) (*models.Beer, error) {
+func (s *BeerService) Get(rs app.RequestScope, id uint) (*models.Beer, error) {
 	return s.dao.Get(rs, id)
 }
 
@@ -44,22 +44,22 @@ func (s *BeerService) Create(rs app.RequestScope, model *models.Beer) (*models.B
 	if err := s.dao.Create(rs, model); err != nil {
 		return nil, err
 	}
-	return s.dao.Get(rs, model.Id)
+	return s.dao.Get(rs, model.ID)
 }
 
 // Update updates the beer with the specified ID.
-func (s *BeerService) Update(rs app.RequestScope, id int, model *models.Beer) (*models.Beer, error) {
+func (s *BeerService) Update(rs app.RequestScope, id uint, model *models.Beer) (*models.Beer, error) {
 	if err := model.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.dao.Update(rs, id, model); err != nil {
+	if err := s.dao.Update(rs, model); err != nil {
 		return nil, err
 	}
 	return s.dao.Get(rs, id)
 }
 
 // Delete deletes the beer with the specified ID.
-func (s *BeerService) Delete(rs app.RequestScope, id int) (*models.Beer, error) {
+func (s *BeerService) Delete(rs app.RequestScope, id uint) (*models.Beer, error) {
 	beer, err := s.dao.Get(rs, id)
 	if err != nil {
 		return nil, err

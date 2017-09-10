@@ -40,6 +40,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 	db.SetLogger(logger)
 	db.Begin()
 	// wire up API routing

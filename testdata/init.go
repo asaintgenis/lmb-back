@@ -1,14 +1,10 @@
 package testdata
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"strings"
-
 	_ "github.com/lib/pq" // initialize posgresql for test
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"github.com/jinzhu/gorm"
+	"gitlab.com/locatemybeer/lmb-back/models"
 )
 
 var (
@@ -21,43 +17,31 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	DB, err = gorm.Open("postgres", app.Config.DSN)
-	if err != nil {
-		panic(err)
-	}
 }
 
 // ResetDB re-create the database schema and re-populate the initial data using the SQL statements in db.sql.
 // This method is mainly used in tests.
 func ResetDB() *gorm.DB {
-	if err := runSQLFile(DB, getSQLFile()); err != nil {
-		panic(fmt.Errorf("Error while initializing test database: %s", err))
-	}
-	return DB
-}
-
-func getSQLFile() string {
-	if _, err := os.Stat("testdata/db.sql"); err == nil {
-		return "testdata/db.sql"
-	}
-	return "../testdata/db.sql"
-}
-
-func runSQLFile(db *gorm.DB, file string) error {
-	s, err := ioutil.ReadFile(file)
+	db, err := gorm.Open("postgres", app.Config.DSN)
 	if err != nil {
-		return err
+		panic(err)
 	}
-	lines := strings.Split(string(s), ";")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-		if err := db.Exec(line).Error; err != nil {
-			fmt.Println(line)
-			return err
-		}
+	db.DropTable(&models.Beer{})
+	err = db.AutoMigrate(&models.Beer{}).Error
+	if err != nil {
+		panic(err)
 	}
-	return nil
+	return db
+}
+
+func CreateBeerData(db *gorm.DB) {
+	var records = []models.Beer{
+		{Name: "aaa", Content:"aaa content"},
+		{Name: "bbb", Content:"bbb content"},
+		{Name: "ccc", Content:"ccc content"},
+	}
+
+	for _, r := range records {
+		db.Create(&r)
+	}
 }

@@ -10,8 +10,11 @@ import (
 )
 
 func TestBeer(t *testing.T) {
-	testdata.ResetDB()
+	db := testdata.ResetDB()
+	defer db.Close()
+
 	router := newRouter()
+
 	ServeBeerResource(&router.RouteGroup, services.NewBeerService(daos.NewBeerDAO()))
 
 	notFoundError := `{"error_code":"NOT_FOUND", "message":"NOT_FOUND"}`

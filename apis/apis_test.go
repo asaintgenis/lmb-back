@@ -10,8 +10,8 @@ import (
 	"github.com/go-ozzo/ozzo-routing"
 	"github.com/go-ozzo/ozzo-routing/content"
 	"gitlab.com/locatemybeer/lmb-back/app"
-	"gitlab.com/locatemybeer/lmb-back/testdata"
 	"github.com/stretchr/testify/assert"
+	"github.com/jinzhu/gorm"
 )
 
 type apiTestCase struct {
@@ -27,12 +27,17 @@ func newRouter() *routing.Router {
 	logger := logrus.New()
 	logger.Level = logrus.PanicLevel
 
+	//connecting to DB
+	db, err := gorm.Open("postgres", app.Config.DSN)
+	if err != nil {
+		panic(err)
+	}
+
 	router := routing.New()
 
 	router.Use(
-		app.Init(logger),
+		app.Init(logger, db),
 		content.TypeNegotiator(content.JSON),
-		app.Transactional(testdata.DB),
 	)
 
 	return router

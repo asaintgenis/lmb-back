@@ -30,22 +30,27 @@ func TestBeerService_Create(t *testing.T) {
 	s := NewBeerService(newMockBeerDAO())
 	beer, err := s.Create(nil, &models.Beer{
 		Name: "ddd",
+		Content: "rrr",
 	})
 	if assert.Nil(t, err) && assert.NotNil(t, beer) {
-		assert.Equal(t, 4, beer.Id)
+		assert.Equal(t, uint(4), beer.ID)
 		assert.Equal(t, "ddd", beer.Name)
+		assert.Equal(t, "rrr", beer.Content)
 	}
 
-	// dao error
+	// validation error
+	// Empty Name
 	_, err = s.Create(nil, &models.Beer{
-		Id:   100,
-		Name: "ddd",
+		Name: "",
+		Content: "rrr",
 	})
 	assert.NotNil(t, err)
 
 	// validation error
+	// Empty Content
 	_, err = s.Create(nil, &models.Beer{
-		Name: "",
+		Name: "ddd",
+		Content: "",
 	})
 	assert.NotNil(t, err)
 }
@@ -54,21 +59,27 @@ func TestBeerService_Update(t *testing.T) {
 	s := NewBeerService(newMockBeerDAO())
 	beer, err := s.Update(nil, 2, &models.Beer{
 		Name: "ddd",
+		Content: "rrr",
 	})
 	if assert.Nil(t, err) && assert.NotNil(t, beer) {
-		assert.Equal(t, 2, beer.Id)
+		assert.Equal(t, uint(2), beer.ID)
 		assert.Equal(t, "ddd", beer.Name)
+		assert.Equal(t,"rrr", beer.Content)
 	}
 
-	// dao error
-	_, err = s.Update(nil, 100, &models.Beer{
-		Name: "ddd",
+	// validation error
+	// Empty Name
+	_, err = s.Update(nil, 2, &models.Beer{
+		Name: "",
+		Content: "rrr",
 	})
 	assert.NotNil(t, err)
 
 	// validation error
+	// Empty Content
 	_, err = s.Update(nil, 2, &models.Beer{
-		Name: "",
+		Name: "ddd",
+		Content: "",
 	})
 	assert.NotNil(t, err)
 }
@@ -77,7 +88,7 @@ func TestBeerService_Delete(t *testing.T) {
 	s := NewBeerService(newMockBeerDAO())
 	beer, err := s.Delete(nil, 2)
 	if assert.Nil(t, err) && assert.NotNil(t, beer) {
-		assert.Equal(t, 2, beer.Id)
+		assert.Equal(t, uint(2), beer.ID)
 		assert.Equal(t, "bbb", beer.Name)
 	}
 
@@ -94,22 +105,30 @@ func TestBeerService_Query(t *testing.T) {
 }
 
 func newMockBeerDAO() beerDao {
-	return &mockBeerDAO{
+	mockBeerDAO := &mockBeerDAO{
 		records: []models.Beer{
-			{Id: 1, Name: "aaa"},
-			{Id: 2, Name: "bbb"},
-			{Id: 3, Name: "ccc"},
+			{Name: "aaa", Content: "aaa content"},
+			{Name: "bbb", Content: "bbb content"},
+			{Name: "ccc", Content: "ccc content"},
 		},
 	}
+	mockBeerDAO.prepareMockData()
+	return mockBeerDAO
 }
 
 type mockBeerDAO struct {
 	records []models.Beer
 }
 
-func (m *mockBeerDAO) Get(rs app.RequestScope, id int) (*models.Beer, error) {
+func (m *mockBeerDAO) prepareMockData() {
+	for index := range m.records {
+		m.records[index].ID = uint(index + 1)
+	}
+}
+
+func (m *mockBeerDAO) Get(rs app.RequestScope, id uint) (*models.Beer, error) {
 	for _, record := range m.records {
-		if record.Id == id {
+		if record.ID == id {
 			return &record, nil
 		}
 	}
@@ -125,18 +144,18 @@ func (m *mockBeerDAO) Count(rs app.RequestScope) (int, error) {
 }
 
 func (m *mockBeerDAO) Create(rs app.RequestScope, beer *models.Beer) error {
-	if beer.Id != 0 {
+	if beer.ID != 0 {
 		return errors.New("Id cannot be set")
 	}
-	beer.Id = len(m.records) + 1
+	beer.ID = uint(len(m.records) + 1)
 	m.records = append(m.records, *beer)
 	return nil
 }
 
-func (m *mockBeerDAO) Update(rs app.RequestScope, id int, beer *models.Beer) error {
-	beer.Id = id
+func (m *mockBeerDAO) Update(rs app.RequestScope, id uint, beer *models.Beer) error {
+	beer.ID = id
 	for i, record := range m.records {
-		if record.Id == id {
+		if record.ID == id {
 			m.records[i] = *beer
 			return nil
 		}
@@ -144,9 +163,9 @@ func (m *mockBeerDAO) Update(rs app.RequestScope, id int, beer *models.Beer) err
 	return errors.New("not found")
 }
 
-func (m *mockBeerDAO) Delete(rs app.RequestScope, id int) error {
+func (m *mockBeerDAO) Delete(rs app.RequestScope, id uint) error {
 	for i, record := range m.records {
-		if record.Id == id {
+		if record.ID == id {
 			m.records = append(m.records[:i], m.records[i+1:]...)
 			return nil
 		}
