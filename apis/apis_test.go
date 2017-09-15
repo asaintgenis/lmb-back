@@ -20,7 +20,6 @@ type apiTestCase struct {
 	url      string
 	body     string
 	status   int
-	response string
 }
 
 func newRouter() *routing.Router {
@@ -55,8 +54,5 @@ func runAPITests(t *testing.T, router *routing.Router, tests []apiTestCase) {
 	for _, test := range tests {
 		res := testAPI(router, test.method, test.url, test.body)
 		assert.Equal(t, test.status, res.Code, test.tag)
-		if test.response != "" {
-			assert.JSONEq(t, test.response, res.Body.String(), test.tag)
-		}
 	}
 }

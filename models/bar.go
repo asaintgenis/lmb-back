@@ -1,11 +1,14 @@
 package models
 
-import "github.com/go-ozzo/ozzo-validation"
+import (
+	"github.com/go-ozzo/ozzo-validation"
+	"github.com/jinzhu/gorm"
+)
 
 // Beer represents a beer record.
 type Bar struct {
-	Id   int    `json:"id" db:"id"`
-	Name string `json:"name" db:"title"`
+	gorm.Model
+	Name string `json:"name"`
 }
 
 // Validate validates the Beer fields.

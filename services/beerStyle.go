@@ -8,7 +8,7 @@ import (
 // beerStyleDao specifies the interface of the beerStyle DAO needed by BeerStyleService.
 type beerStyleDao interface {
 	// Get returns the beerStyle with the specified beerStyle ID.
-	Get(rs app.RequestScope, id int) (*models.BeerStyle, error)
+	Get(rs app.RequestScope, id uint) (*models.BeerStyle, error)
 	// Count returns the number of beerStyles.
 	Count(rs app.RequestScope) (int, error)
 	// Query returns the list of beerStyles with the given offset and limit.
@@ -16,9 +16,9 @@ type beerStyleDao interface {
 	// Create saves a new beerStyle in the storage.
 	Create(rs app.RequestScope, beerStyle *models.BeerStyle) error
 	// Update updates the beerStyle with given ID in the storage.
-	Update(rs app.RequestScope, id int, beerStyle *models.BeerStyle) error
+	Update(rs app.RequestScope, beerStyle *models.BeerStyle) error
 	// Delete removes the beerStyle with given ID from the storage.
-	Delete(rs app.RequestScope, id int) error
+	Delete(rs app.RequestScope, id uint) error
 }
 
 // BeerStyleService provides services related with beerStyles.
@@ -32,7 +32,7 @@ func NewBeerStyleService(dao beerStyleDao) *BeerStyleService {
 }
 
 // Get returns the beerStyle with the specified the beerStyle ID.
-func (s *BeerStyleService) Get(rs app.RequestScope, id int) (*models.BeerStyle, error) {
+func (s *BeerStyleService) Get(rs app.RequestScope, id uint) (*models.BeerStyle, error) {
 	return s.dao.Get(rs, id)
 }
 
@@ -44,22 +44,22 @@ func (s *BeerStyleService) Create(rs app.RequestScope, model *models.BeerStyle) 
 	if err := s.dao.Create(rs, model); err != nil {
 		return nil, err
 	}
-	return s.dao.Get(rs, model.Id)
+	return s.dao.Get(rs, model.ID)
 }
 
 // Update updates the beerStyle with the specified ID.
-func (s *BeerStyleService) Update(rs app.RequestScope, id int, model *models.BeerStyle) (*models.BeerStyle, error) {
+func (s *BeerStyleService) Update(rs app.RequestScope, id uint, model *models.BeerStyle) (*models.BeerStyle, error) {
 	if err := model.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.dao.Update(rs, id, model); err != nil {
+	if err := s.dao.Update(rs, model); err != nil {
 		return nil, err
 	}
 	return s.dao.Get(rs, id)
 }
 
 // Delete deletes the beerStyle with the specified ID.
-func (s *BeerStyleService) Delete(rs app.RequestScope, id int) (*models.BeerStyle, error) {
+func (s *BeerStyleService) Delete(rs app.RequestScope, id uint) (*models.BeerStyle, error) {
 	beerStyle, err := s.dao.Get(rs, id)
 	if err != nil {
 		return nil, err

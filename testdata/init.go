@@ -27,7 +27,11 @@ func ResetDB() *gorm.DB {
 		panic(err)
 	}
 	db.DropTable(&models.Beer{})
+	db.DropTable(&models.BeerStyle{})
+	db.DropTable(&models.Bar{})
 	err = db.AutoMigrate(&models.Beer{}).Error
+	err = db.AutoMigrate(&models.BeerStyle{}).Error
+	err = db.AutoMigrate(&models.Bar{}).Error
 	if err != nil {
 		panic(err)
 	}
@@ -39,6 +43,30 @@ func CreateBeerData(db *gorm.DB) {
 		{Name: "aaa", Content:"aaa content"},
 		{Name: "bbb", Content:"bbb content"},
 		{Name: "ccc", Content:"ccc content"},
+	}
+
+	for _, r := range records {
+		db.Create(&r)
+	}
+}
+
+func CreateBarData(db *gorm.DB) {
+	var records = []models.Bar{
+		{Name: "aaa"},
+		{Name: "bbb"},
+		{Name: "ccc"},
+	}
+
+	for _, r := range records {
+		db.Create(&r)
+	}
+}
+
+func CreateBeerStyleData(db *gorm.DB) {
+	var records = []models.BeerStyle{
+		{Name: "aaa"},
+		{Name: "bbb"},
+		{Name: "ccc"},
 	}
 
 	for _, r := range records {

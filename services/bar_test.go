@@ -32,16 +32,9 @@ func TestBarService_Create(t *testing.T) {
 		Name: "ddd",
 	})
 	if assert.Nil(t, err) && assert.NotNil(t, bar) {
-		assert.Equal(t, 4, bar.Id)
+		assert.Equal(t, uint(4), bar.ID)
 		assert.Equal(t, "ddd", bar.Name)
 	}
-
-	// dao error
-	_, err = s.Create(nil, &models.Bar{
-		Id:   100,
-		Name: "ddd",
-	})
-	assert.NotNil(t, err)
 
 	// validation error
 	_, err = s.Create(nil, &models.Bar{
@@ -52,20 +45,15 @@ func TestBarService_Create(t *testing.T) {
 
 func TestBarService_Update(t *testing.T) {
 	s := NewBarService(newMockBarDAO())
-	bar, err := s.Update(nil, 2, &models.Bar{
+	barToUpdate := models.Bar{
 		Name: "ddd",
-	})
+	}
+	barToUpdate.ID = 2
+	bar, err := s.Update(nil, 2, &barToUpdate)
 	if assert.Nil(t, err) && assert.NotNil(t, bar) {
-		assert.Equal(t, 2, bar.Id)
+		assert.Equal(t, uint(2), bar.ID)
 		assert.Equal(t, "ddd", bar.Name)
 	}
-
-	// dao error
-	_, err = s.Update(nil, 100, &models.Bar{
-		Name: "ddd",
-	})
-	assert.NotNil(t, err)
-
 	// validation error
 	_, err = s.Update(nil, 2, &models.Bar{
 		Name: "",
@@ -77,7 +65,7 @@ func TestBarService_Delete(t *testing.T) {
 	s := NewBarService(newMockBarDAO())
 	bar, err := s.Delete(nil, 2)
 	if assert.Nil(t, err) && assert.NotNil(t, bar) {
-		assert.Equal(t, 2, bar.Id)
+		assert.Equal(t, uint(2), bar.ID)
 		assert.Equal(t, "bbb", bar.Name)
 	}
 
@@ -94,22 +82,30 @@ func TestBarService_Query(t *testing.T) {
 }
 
 func newMockBarDAO() barDao {
-	return &mockBarDAO{
+	mockBarDAO := &mockBarDAO{
 		records: []models.Bar{
-			{Id: 1, Name: "aaa"},
-			{Id: 2, Name: "bbb"},
-			{Id: 3, Name: "ccc"},
+			{Name: "aaa"},
+			{Name: "bbb"},
+			{Name: "ccc"},
 		},
 	}
+	mockBarDAO.prepareMockData()
+	return mockBarDAO
 }
 
 type mockBarDAO struct {
 	records []models.Bar
 }
 
-func (m *mockBarDAO) Get(rs app.RequestScope, id int) (*models.Bar, error) {
+func (m *mockBarDAO) prepareMockData() {
+	for index := range m.records {
+		m.records[index].ID = uint(index + 1)
+	}
+}
+
+func (m *mockBarDAO) Get(rs app.RequestScope, id uint) (*models.Bar, error) {
 	for _, record := range m.records {
-		if record.Id == id {
+		if record.ID == id {
 			return &record, nil
 		}
 	}
@@ -125,18 +121,17 @@ func (m *mockBarDAO) Count(rs app.RequestScope) (int, error) {
 }
 
 func (m *mockBarDAO) Create(rs app.RequestScope, bar *models.Bar) error {
-	if bar.Id != 0 {
+	if bar.ID != 0 {
 		return errors.New("Id cannot be set")
 	}
-	bar.Id = len(m.records) + 1
+	bar.ID = uint(len(m.records) + 1)
 	m.records = append(m.records, *bar)
 	return nil
 }
 
-func (m *mockBarDAO) Update(rs app.RequestScope, id int, bar *models.Bar) error {
-	bar.Id = id
+func (m *mockBarDAO) Update(rs app.RequestScope, bar *models.Bar) error {
 	for i, record := range m.records {
-		if record.Id == id {
+		if record.ID == bar.ID {
 			m.records[i] = *bar
 			return nil
 		}
@@ -144,9 +139,9 @@ func (m *mockBarDAO) Update(rs app.RequestScope, id int, bar *models.Bar) error 
 	return errors.New("not found")
 }
 
-func (m *mockBarDAO) Delete(rs app.RequestScope, id int) error {
+func (m *mockBarDAO) Delete(rs app.RequestScope, id uint) error {
 	for i, record := range m.records {
-		if record.Id == id {
+		if record.ID == id {
 			m.records = append(m.records[:i], m.records[i+1:]...)
 			return nil
 		}

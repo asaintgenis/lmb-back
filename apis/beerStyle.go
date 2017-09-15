@@ -11,12 +11,12 @@ import (
 type (
 	// beerStyleService specifies the interface for the beerstyle service needed by beerStyleResource.
 	beerStyleService interface {
-		Get(rs app.RequestScope, id int) (*models.BeerStyle, error)
+		Get(rs app.RequestScope, id uint) (*models.BeerStyle, error)
 		Query(rs app.RequestScope, offset, limit int) ([]models.BeerStyle, error)
 		Count(rs app.RequestScope) (int, error)
 		Create(rs app.RequestScope, model *models.BeerStyle) (*models.BeerStyle, error)
-		Update(rs app.RequestScope, id int, model *models.BeerStyle) (*models.BeerStyle, error)
-		Delete(rs app.RequestScope, id int) (*models.BeerStyle, error)
+		Update(rs app.RequestScope, id uint, model *models.BeerStyle) (*models.BeerStyle, error)
+		Delete(rs app.RequestScope, id uint) (*models.BeerStyle, error)
 	}
 
 	// beerResource defines the handlers for the CRUD APIs.
@@ -41,7 +41,7 @@ func (r *beerStyleResource) get(c *routing.Context) error {
 		return err
 	}
 
-	response, err := r.service.Get(app.GetRequestScope(c), id)
+	response, err := r.service.Get(app.GetRequestScope(c), uint(id))
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (r *beerStyleResource) update(c *routing.Context) error {
 
 	rs := app.GetRequestScope(c)
 
-	model, err := r.service.Get(rs, id)
+	model, err := r.service.Get(rs, uint(id))
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (r *beerStyleResource) update(c *routing.Context) error {
 		return err
 	}
 
-	response, err := r.service.Update(rs, id, model)
+	response, err := r.service.Update(rs, uint(id), model)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (r *beerStyleResource) delete(c *routing.Context) error {
 		return err
 	}
 
-	response, err := r.service.Delete(app.GetRequestScope(c), id)
+	response, err := r.service.Delete(app.GetRequestScope(c), uint(id))
 	if err != nil {
 		return err
 	}

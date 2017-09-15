@@ -57,10 +57,12 @@ func TestBeerService_Create(t *testing.T) {
 
 func TestBeerService_Update(t *testing.T) {
 	s := NewBeerService(newMockBeerDAO())
-	beer, err := s.Update(nil, 2, &models.Beer{
+	beerToUpdate := models.Beer{
 		Name: "ddd",
 		Content: "rrr",
-	})
+	}
+	beerToUpdate.ID = 2
+	beer, err := s.Update(nil, 2, &beerToUpdate)
 	if assert.Nil(t, err) && assert.NotNil(t, beer) {
 		assert.Equal(t, uint(2), beer.ID)
 		assert.Equal(t, "ddd", beer.Name)
@@ -152,10 +154,9 @@ func (m *mockBeerDAO) Create(rs app.RequestScope, beer *models.Beer) error {
 	return nil
 }
 
-func (m *mockBeerDAO) Update(rs app.RequestScope, id uint, beer *models.Beer) error {
-	beer.ID = id
+func (m *mockBeerDAO) Update(rs app.RequestScope, beer *models.Beer) error {
 	for i, record := range m.records {
-		if record.ID == id {
+		if record.ID == beer.ID {
 			m.records[i] = *beer
 			return nil
 		}

@@ -11,6 +11,7 @@ import (
 
 func TestBarDAO(t *testing.T) {
 	db := testdata.ResetDB()
+	testdata.CreateBarData(db)
 	dao := NewBarDAO()
 
 	{
@@ -19,7 +20,8 @@ func TestBarDAO(t *testing.T) {
 			bar, err := dao.Get(rs, 2)
 			assert.Nil(t, err)
 			if assert.NotNil(t, bar) {
-				assert.Equal(t, 2, bar.Id)
+				assert.Equal(t, uint(2), bar.ID)
+				assert.Equal(t, "bbb", bar.Name)
 			}
 		})
 	}
@@ -28,37 +30,26 @@ func TestBarDAO(t *testing.T) {
 		// Create
 		testDBCall(db, func(rs app.RequestScope) {
 			bar := &models.Bar{
-				Id:   1000,
 				Name: "tester",
 			}
 			err := dao.Create(rs, bar)
 			assert.Nil(t, err)
-			assert.NotEqual(t, 1000, bar.Id)
-			assert.NotZero(t, bar.Id)
+			assert.NotZero(t, bar.ID)
 		})
 	}
 
 	{
 		// Update
 		testDBCall(db, func(rs app.RequestScope) {
-			bar := &models.Bar{
-				Id:   2,
-				Name: "tester",
-			}
-			err := dao.Update(rs, bar.Id, bar)
+			bar, err := dao.Get(rs, 2)
 			assert.Nil(t, err)
-		})
-	}
+			bar.Name = "modified test"
+			err = dao.Update(rs, bar)
+			assert.Nil(t, err)
 
-	{
-		// Update with error
-		testDBCall(db, func(rs app.RequestScope) {
-			bar := &models.Bar{
-				Id:   2,
-				Name: "tester",
-			}
-			err := dao.Update(rs, 99999, bar)
-			assert.NotNil(t, err)
+			bar, err = dao.Get(rs, 2)
+			assert.Nil(t, err)
+			assert.Equal(t, "modified test", bar.Name)
 		})
 	}
 

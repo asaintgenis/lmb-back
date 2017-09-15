@@ -11,6 +11,7 @@ import (
 
 func TestBeerStyleDAO(t *testing.T) {
 	db := testdata.ResetDB()
+	testdata.CreateBeerStyleData(db)
 	dao := NewBeerStyleDAO()
 
 	{
@@ -19,7 +20,7 @@ func TestBeerStyleDAO(t *testing.T) {
 			beerStyle, err := dao.Get(rs, 2)
 			assert.Nil(t, err)
 			if assert.NotNil(t, beerStyle) {
-				assert.Equal(t, 2, beerStyle.Id)
+				assert.Equal(t, uint(2), beerStyle.ID)
 			}
 		})
 	}
@@ -28,37 +29,26 @@ func TestBeerStyleDAO(t *testing.T) {
 		// Create
 		testDBCall(db, func(rs app.RequestScope) {
 			beerStyle := &models.BeerStyle{
-				Id:   1000,
 				Name: "tester",
 			}
 			err := dao.Create(rs, beerStyle)
 			assert.Nil(t, err)
-			assert.NotEqual(t, 1000, beerStyle.Id)
-			assert.NotZero(t, beerStyle.Id)
+			assert.NotZero(t, beerStyle.ID)
 		})
 	}
 
 	{
 		// Update
 		testDBCall(db, func(rs app.RequestScope) {
-			beerStyle := &models.BeerStyle{
-				Id:   2,
-				Name: "tester",
-			}
-			err := dao.Update(rs, beerStyle.Id, beerStyle)
+			beerStyle, err := dao.Get(rs, 2)
 			assert.Nil(t, err)
-		})
-	}
+			beerStyle.Name = "modified test"
+			err = dao.Update(rs, beerStyle)
+			assert.Nil(t, err)
 
-	{
-		// Update with error
-		testDBCall(db, func(rs app.RequestScope) {
-			beerStyle := &models.BeerStyle{
-				Id:   2,
-				Name: "tester",
-			}
-			err := dao.Update(rs, 99999, beerStyle)
-			assert.NotNil(t, err)
+			beerStyle, err = dao.Get(rs, 2)
+			assert.Nil(t, err)
+			assert.Equal(t, "modified test", beerStyle.Name)
 		})
 	}
 

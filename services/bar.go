@@ -8,7 +8,7 @@ import (
 // barDao specifies the interface of the bar DAO needed by BarService.
 type barDao interface {
 	// Get returns the bar with the specified bar ID.
-	Get(rs app.RequestScope, id int) (*models.Bar, error)
+	Get(rs app.RequestScope, id uint) (*models.Bar, error)
 	// Count returns the number of bars.
 	Count(rs app.RequestScope) (int, error)
 	// Query returns the list of bars with the given offset and limit.
@@ -16,9 +16,9 @@ type barDao interface {
 	// Create saves a new bar in the storage.
 	Create(rs app.RequestScope, bar *models.Bar) error
 	// Update updates the bar with given ID in the storage.
-	Update(rs app.RequestScope, id int, bar *models.Bar) error
+	Update(rs app.RequestScope, bar *models.Bar) error
 	// Delete removes the bar with given ID from the storage.
-	Delete(rs app.RequestScope, id int) error
+	Delete(rs app.RequestScope, id uint) error
 }
 
 // BarService provides services related with bars.
@@ -32,7 +32,7 @@ func NewBarService(dao barDao) *BarService {
 }
 
 // Get returns the bar with the specified the bar ID.
-func (s *BarService) Get(rs app.RequestScope, id int) (*models.Bar, error) {
+func (s *BarService) Get(rs app.RequestScope, id uint) (*models.Bar, error) {
 	return s.dao.Get(rs, id)
 }
 
@@ -44,22 +44,22 @@ func (s *BarService) Create(rs app.RequestScope, model *models.Bar) (*models.Bar
 	if err := s.dao.Create(rs, model); err != nil {
 		return nil, err
 	}
-	return s.dao.Get(rs, model.Id)
+	return s.dao.Get(rs, model.ID)
 }
 
 // Update updates the bar with the specified ID.
-func (s *BarService) Update(rs app.RequestScope, id int, model *models.Bar) (*models.Bar, error) {
+func (s *BarService) Update(rs app.RequestScope, id uint, model *models.Bar) (*models.Bar, error) {
 	if err := model.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.dao.Update(rs, id, model); err != nil {
+	if err := s.dao.Update(rs, model); err != nil {
 		return nil, err
 	}
 	return s.dao.Get(rs, id)
 }
 
 // Delete deletes the bar with the specified ID.
-func (s *BarService) Delete(rs app.RequestScope, id int) (*models.Bar, error) {
+func (s *BarService) Delete(rs app.RequestScope, id uint) (*models.Bar, error) {
 	bar, err := s.dao.Get(rs, id)
 	if err != nil {
 		return nil, err

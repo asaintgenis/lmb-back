@@ -11,12 +11,12 @@ import (
 type (
 	// barService specifies the interface for the bar service needed by barResource.
 	barService interface {
-		Get(rs app.RequestScope, id int) (*models.Bar, error)
+		Get(rs app.RequestScope, id uint) (*models.Bar, error)
 		Query(rs app.RequestScope, offset, limit int) ([]models.Bar, error)
 		Count(rs app.RequestScope) (int, error)
 		Create(rs app.RequestScope, model *models.Bar) (*models.Bar, error)
-		Update(rs app.RequestScope, id int, model *models.Bar) (*models.Bar, error)
-		Delete(rs app.RequestScope, id int) (*models.Bar, error)
+		Update(rs app.RequestScope, id uint, model *models.Bar) (*models.Bar, error)
+		Delete(rs app.RequestScope, id uint) (*models.Bar, error)
 	}
 
 	// barResource defines the handlers for the CRUD APIs.
@@ -41,7 +41,7 @@ func (r *barResource) get(c *routing.Context) error {
 		return err
 	}
 
-	response, err := r.service.Get(app.GetRequestScope(c), id)
+	response, err := r.service.Get(app.GetRequestScope(c),uint(id))
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (r *barResource) update(c *routing.Context) error {
 
 	rs := app.GetRequestScope(c)
 
-	model, err := r.service.Get(rs, id)
+	model, err := r.service.Get(rs, uint(id))
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (r *barResource) update(c *routing.Context) error {
 		return err
 	}
 
-	response, err := r.service.Update(rs, id, model)
+	response, err := r.service.Update(rs, uint(id), model)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (r *barResource) delete(c *routing.Context) error {
 		return err
 	}
 
-	response, err := r.service.Delete(app.GetRequestScope(c), id)
+	response, err := r.service.Delete(app.GetRequestScope(c), uint(id))
 	if err != nil {
 		return err
 	}

@@ -3,14 +3,15 @@ package models
 import (
 	"github.com/lucasb-eyer/go-colorful"
 	"github.com/go-ozzo/ozzo-validation"
+	"github.com/jinzhu/gorm"
 )
 
 type BeerStyle struct {
-	Id   int    `json:"id" db:"id"`
-	Srm int `json:"srm" db:"srm"`
-	Name string `json:"name" db:"name"`
-	color colorful.Color `json:"color" db:"color"`
-	Ebc int `json:"ebc" db:"ebc"`
+	gorm.Model
+	Srm int `json:"srm"`
+	Name string `json:"name"`
+	color colorful.Color `json:"color"`
+	Ebc int `json:"ebc"`
 }
 
 // Validate validates the Beer fields.
