@@ -50,6 +50,12 @@ func CreateBeerData(db *gorm.DB) {
 	}
 }
 
+func CreateBaseData(db *gorm.DB) {
+	CreateBeerData(db)
+	CreateBarData(db)
+	CreateBeerStyleData(db)
+}
+
 func CreateBarData(db *gorm.DB) {
 	var records = []models.Bar{
 		{Name: "aaa"},

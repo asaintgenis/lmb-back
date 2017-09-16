@@ -17,6 +17,7 @@ import (
 	"gitlab.com/locatemybeer/lmb-back/daos"
 	"gitlab.com/locatemybeer/lmb-back/errors"
 	"gitlab.com/locatemybeer/lmb-back/services"
+	"gitlab.com/locatemybeer/lmb-back/testdata"
 )
 
 func main() {
@@ -43,6 +44,8 @@ func main() {
 	defer db.Close()
 	db.SetLogger(logger)
 	db.Begin()
+	testdata.ResetDB()
+	testdata.CreateBaseData(db)
 	// wire up API routing
 	http.Handle("/", buildRouter(logger,db))
 
