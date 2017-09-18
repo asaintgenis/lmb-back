@@ -3,10 +3,10 @@ package daos
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"gitlab.com/locatemybeer/lmb-back/models"
 	"gitlab.com/locatemybeer/lmb-back/testdata"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBeerStyleDAO(t *testing.T) {

@@ -9,17 +9,17 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/go-ozzo/ozzo-routing"
 	"github.com/go-ozzo/ozzo-routing/content"
-	"gitlab.com/locatemybeer/lmb-back/app"
-	"github.com/stretchr/testify/assert"
 	"github.com/jinzhu/gorm"
+	"github.com/stretchr/testify/assert"
+	"gitlab.com/locatemybeer/lmb-back/app"
 )
 
 type apiTestCase struct {
-	tag      string
-	method   string
-	url      string
-	body     string
-	status   int
+	tag    string
+	method string
+	url    string
+	body   string
+	status int
 }
 
 func newRouter() *routing.Router {

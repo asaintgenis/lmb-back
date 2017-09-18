@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"gitlab.com/locatemybeer/lmb-back/models"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBarService(t *testing.T) {

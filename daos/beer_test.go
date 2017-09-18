@@ -3,17 +3,16 @@ package daos
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"gitlab.com/locatemybeer/lmb-back/models"
 	"gitlab.com/locatemybeer/lmb-back/testdata"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBeerDAO(t *testing.T) {
 	db := testdata.ResetDB()
 	testdata.CreateBeerData(db)
 	defer db.Close()
-
 
 	dao := NewBeerDAO()
 
@@ -33,7 +32,7 @@ func TestBeerDAO(t *testing.T) {
 		// Create
 		testDBCall(db, func(rs app.RequestScope) {
 			beer := &models.Beer{
-				Name: "tester",
+				Name:    "tester",
 				Content: "test content",
 			}
 			err := dao.Create(rs, beer)

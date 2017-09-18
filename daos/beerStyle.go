@@ -44,7 +44,7 @@ func (dao *BeerStyleDAO) Delete(rs app.RequestScope, id uint) error {
 // Count returns the number of the beerStyle records in the database.
 func (dao *BeerStyleDAO) Count(rs app.RequestScope) (int, error) {
 	var count int
-	err := rs.DB().Table("beerStyles").Count(&count).Error
+	err := rs.DB().Table("beer_styles").Count(&count).Error
 	return count, err
 }
 

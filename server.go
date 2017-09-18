@@ -9,9 +9,9 @@ import (
 	"github.com/go-ozzo/ozzo-routing/auth"
 	"github.com/go-ozzo/ozzo-routing/content"
 	"github.com/go-ozzo/ozzo-routing/cors"
-	_ "github.com/lib/pq"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/lib/pq"
 	"gitlab.com/locatemybeer/lmb-back/apis"
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"gitlab.com/locatemybeer/lmb-back/daos"
@@ -25,8 +25,6 @@ func main() {
 	if err := app.LoadConfig("./config"); err != nil {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
 	}
-
-
 
 	// load error messages
 	if err := errors.LoadMessages(app.Config.ErrorFile); err != nil {
@@ -47,7 +45,7 @@ func main() {
 	testdata.ResetDB()
 	testdata.CreateBaseData(db)
 	// wire up API routing
-	http.Handle("/", buildRouter(logger,db))
+	http.Handle("/", buildRouter(logger, db))
 
 	// start the server
 	address := fmt.Sprintf(":%v", app.Config.ServerPort)
@@ -55,11 +53,11 @@ func main() {
 	panic(http.ListenAndServe(address, nil))
 }
 
-func buildRouter(logger *logrus.Logger,db *gorm.DB) *routing.Router {
+func buildRouter(logger *logrus.Logger, db *gorm.DB) *routing.Router {
 	router := routing.New()
 
 	router.To("GET,HEAD", "/ping", func(c *routing.Context) error {
-		c.Abort()  // skip all other middlewares/handlers
+		c.Abort() // skip all other middlewares/handlers
 		return c.Write("OK " + app.Version)
 	})
 

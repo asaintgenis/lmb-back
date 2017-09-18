@@ -1,8 +1,8 @@
 package apis
 
 import (
-	"testing"
 	"net/http"
+	"testing"
 )
 
 func TestAuth(t *testing.T) {

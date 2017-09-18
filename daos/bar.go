@@ -1,8 +1,8 @@
 package daos
 
 import (
-"gitlab.com/locatemybeer/lmb-back/app"
-"gitlab.com/locatemybeer/lmb-back/models"
+	"gitlab.com/locatemybeer/lmb-back/app"
+	"gitlab.com/locatemybeer/lmb-back/models"
 )
 
 // BeerDAO persists beer data in database

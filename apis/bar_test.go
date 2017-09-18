@@ -10,7 +10,8 @@ import (
 )
 
 func TestBar(t *testing.T) {
-	testdata.ResetDB()
+	db := testdata.ResetDB()
+	testdata.CreateBarData(db)
 	router := newRouter()
 	ServeBarResource(&router.RouteGroup, services.NewBarService(daos.NewBarDAO()))
 

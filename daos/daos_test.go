@@ -3,8 +3,8 @@ package daos
 import (
 	"time"
 
-	"gitlab.com/locatemybeer/lmb-back/app"
 	"github.com/jinzhu/gorm"
+	"gitlab.com/locatemybeer/lmb-back/app"
 )
 
 func testDBCall(db *gorm.DB, f func(rs app.RequestScope)) {

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"gitlab.com/locatemybeer/lmb-back/app"
 	"gitlab.com/locatemybeer/lmb-back/models"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBeerService(t *testing.T) {
@@ -29,7 +29,7 @@ func TestBeerService_Get(t *testing.T) {
 func TestBeerService_Create(t *testing.T) {
 	s := NewBeerService(newMockBeerDAO())
 	beer, err := s.Create(nil, &models.Beer{
-		Name: "ddd",
+		Name:    "ddd",
 		Content: "rrr",
 	})
 	if assert.Nil(t, err) && assert.NotNil(t, beer) {
@@ -41,7 +41,7 @@ func TestBeerService_Create(t *testing.T) {
 	// validation error
 	// Empty Name
 	_, err = s.Create(nil, &models.Beer{
-		Name: "",
+		Name:    "",
 		Content: "rrr",
 	})
 	assert.NotNil(t, err)
@@ -49,7 +49,7 @@ func TestBeerService_Create(t *testing.T) {
 	// validation error
 	// Empty Content
 	_, err = s.Create(nil, &models.Beer{
-		Name: "ddd",
+		Name:    "ddd",
 		Content: "",
 	})
 	assert.NotNil(t, err)
@@ -58,7 +58,7 @@ func TestBeerService_Create(t *testing.T) {
 func TestBeerService_Update(t *testing.T) {
 	s := NewBeerService(newMockBeerDAO())
 	beerToUpdate := models.Beer{
-		Name: "ddd",
+		Name:    "ddd",
 		Content: "rrr",
 	}
 	beerToUpdate.ID = 2
@@ -66,13 +66,13 @@ func TestBeerService_Update(t *testing.T) {
 	if assert.Nil(t, err) && assert.NotNil(t, beer) {
 		assert.Equal(t, uint(2), beer.ID)
 		assert.Equal(t, "ddd", beer.Name)
-		assert.Equal(t,"rrr", beer.Content)
+		assert.Equal(t, "rrr", beer.Content)
 	}
 
 	// validation error
 	// Empty Name
 	_, err = s.Update(nil, 2, &models.Beer{
-		Name: "",
+		Name:    "",
 		Content: "rrr",
 	})
 	assert.NotNil(t, err)
@@ -80,7 +80,7 @@ func TestBeerService_Update(t *testing.T) {
 	// validation error
 	// Empty Content
 	_, err = s.Update(nil, 2, &models.Beer{
-		Name: "ddd",
+		Name:    "ddd",
 		Content: "",
 	})
 	assert.NotNil(t, err)

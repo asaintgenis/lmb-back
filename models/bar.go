@@ -17,4 +17,3 @@ func (m Bar) Validate() error {
 		validation.Field(&m.Name, validation.Required, validation.Length(0, 120)),
 	)
 }
-

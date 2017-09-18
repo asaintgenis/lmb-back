@@ -30,7 +30,7 @@ type requestScope struct {
 	now       time.Time // the time when the request is being processed
 	requestID string    // an ID identifying one or multiple correlated HTTP requests
 	userID    string    // an ID identifying the current user
-	db *gorm.DB // the db connection
+	db        *gorm.DB  // the db connection
 }
 
 func (rs *requestScope) UserID() string {
@@ -69,7 +69,6 @@ func newRequestScope(now time.Time, logger *logrus.Logger, db *gorm.DB, request 
 		Logger:    l,
 		now:       now,
 		requestID: requestID,
-		db: db,
+		db:        db,
 	}
 }
-

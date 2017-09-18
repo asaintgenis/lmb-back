@@ -17,6 +17,6 @@ type Beer struct {
 func (m Beer) Validate() error {
 	return validation.ValidateStruct(&m,
 		validation.Field(&m.Name, validation.Required, validation.Length(0, 120)),
-		validation.Field(&m.Content,validation.Required),
+		validation.Field(&m.Content, validation.Required),
 	)
 }

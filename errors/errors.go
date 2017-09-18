@@ -48,3 +48,7 @@ func InvalidData(errs validation.Errors) *APIError {
 
 	return err
 }
+
+func InvalidParameter(err string) *APIError {
+	return NewAPIError(http.StatusBadRequest, "INVALID_PARAMETER", Params{"error": err})
+}
